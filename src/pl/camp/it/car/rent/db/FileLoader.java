@@ -1,65 +1,73 @@
 package pl.camp.it.car.rent.db;
 
-import pl.camp.it.car.rent.core.Authenticator;
-import pl.camp.it.car.rent.core.Core;
-import pl.camp.it.car.rent.model.Motorcycle;
-import pl.camp.it.car.rent.model.Writable;
+import pl.camp.it.car.rent.model.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 public class FileLoader {
+    private static final FileLoader instance = new FileLoader();
+    private final VehicleRepository vehicleRepository = VehicleRepository.getInstance();
+    private final UserRepository userRepository = UserRepository.getInstance();
 
-    public void readDataFromFile() {
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader("db.csv"));
-            String line;
+    private FileLoader() {
+    }
 
-            while ((line = reader.readLine()) != null) {
-                String[] objectData = line.split(";");
+    public void readDataFromFile() throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader("db.csv"));
+        String line;
 
-                switch (objectData[0]) {
-                    case "Motorcycle":
-                        Motorcycle motorcycle = new Motorcycle(objectData);
-                        break;
-                    case "Bus":
+        while ((line = reader.readLine()) != null) {
+            String[] objectData = line.split(";");
+            String[] vars = Arrays.copyOfRange(objectData, 1, objectData.length);
 
-                        break;
-                    case "Car":
-
-                        break;
-                    case "User":
-
-                        break;
-                    default:
-                        System.out.println("Unexpected type during DB loading");
-
-                }
+            switch (objectData[0]) {
+                case "Motorcycle":
+                    Motorcycle motorcycle = new Motorcycle(vars);
+                    vehicleRepository.addVehicle(motorcycle);
+                    break;
+                case "Bus":
+                    Bus bus = new Bus(vars);
+                    vehicleRepository.addVehicle(bus);
+                    break;
+                case "Car":
+                    Car car = new Car(vars);
+                    vehicleRepository.addVehicle(car);
+                    break;
+                case "User":
+                    User user = new User(vars);
+                    userRepository.addUser(user);
+                    break;
+                default:
+                    System.out.println("Unexpected type during DB loading");
+                    break;
             }
-            reader.close();
-        } catch (IOException e) {
-            System.out.println("ZAPSUTE");
         }
-
+        reader.close();
     }
 
     public void saveDataToFile() throws IOException {
         Collection<Writable> entries = new ArrayList<>();
-        entries.addAll(Core.getVehicleRepository().getVehicles());
-        entries.addAll(Authenticator.getUsersRepository().getUsers());
+        entries.addAll(vehicleRepository.getVehicles());
+        entries.addAll(userRepository.getUsers());
 
         BufferedWriter writer = new BufferedWriter(new FileWriter("db.csv"));
 
         boolean firstTime = true;
         for (Writable entry : entries) {
             String lineInFIle = entry.toCSV();
-            if (firstTime) {
+            if (!firstTime) {
                 writer.newLine();
-                firstTime = false;
             }
+            firstTime = false;
             writer.write(lineInFIle);
         }
         writer.close();
+    }
+
+    public static FileLoader getInstance() {
+        return instance;
     }
 }

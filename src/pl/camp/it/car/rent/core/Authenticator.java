@@ -6,15 +6,17 @@ import pl.camp.it.car.rent.gui.GUI;
 import pl.camp.it.car.rent.model.User;
 
 public class Authenticator {
-    private static final UserRepository usersDatabase = new UserRepository();
-
+    private static final Authenticator instance = new Authenticator();
     private static final String seed = "%&95qbt4LPsqKt41eW!5XfzR#y7sw$wf";
 
-    public static boolean authenticate() {
+    private Authenticator() {
+    }
+
+    public boolean authenticate() {
         int counter = 0;
         while (counter < 3) {
-            User userFromGui = GUI.readLoginAndPassword();
-            User userFromDb = usersDatabase.findUserByLogin(userFromGui.getLogin());
+            User userFromGui = GUI.getInstance().readLoginAndPassword();
+            User userFromDb = UserRepository.getInstance().findUserByLogin(userFromGui.getLogin());
 
 
             if (userFromDb != null
@@ -29,7 +31,7 @@ public class Authenticator {
         return false;
     }
 
-    public static UserRepository getUsersRepository() {
-        return usersDatabase;
+    public static Authenticator getInstance() {
+        return instance;
     }
 }

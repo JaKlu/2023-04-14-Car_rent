@@ -24,6 +24,10 @@ public class Vehicle implements Writable {
     public Vehicle() {
     }
 
+    public String getClassName() {
+        return this.getClass().getSimpleName();
+    }
+
     public String getBrand() {
         return brand;
     }
@@ -77,7 +81,7 @@ public class Vehicle implements Writable {
         return new StringBuilder()
                 .append(this.brand)
                 .append(" ")
-                .append(this.brand)
+                .append(this.model)
                 .append(" ")
                 .append(this.year)
                 .append(" Cena: ")
@@ -93,6 +97,8 @@ public class Vehicle implements Writable {
         return new StringBuilder().append(getClass().getSimpleName())
                 .append(";")
                 .append(this.brand)
+                .append(";")
+                .append(this.model)
                 .append(";")
                 .append(this.year)
                 .append(";")

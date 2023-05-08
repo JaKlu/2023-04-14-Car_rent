@@ -11,5 +11,9 @@ public class Car extends Vehicle {
 
     public Car() {
     }
-
+    public String toString() {
+        return new StringBuilder()
+                .append("Car -> ")
+                .append(super.toString()).toString();
+    }
 }

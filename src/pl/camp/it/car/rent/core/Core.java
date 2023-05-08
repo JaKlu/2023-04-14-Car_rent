@@ -7,31 +7,42 @@ import pl.camp.it.car.rent.gui.GUI;
 import java.io.IOException;
 
 public class Core {
-    private static final VehicleRepository database = new VehicleRepository();
+    private static final Core instance = new Core();
+    private final GUI gui = GUI.getInstance();
+    private final VehicleRepository vehicleRepository = VehicleRepository.getInstance();
+    private final FileLoader fileLoader = FileLoader.getInstance();
 
-    public static void start() {
-        if (!Authenticator.authenticate()) {
+    private Core() {
+    }
+
+    public void start() {
+        try {
+            fileLoader.readDataFromFile();
+        } catch (IOException e) {
+            System.out.println("Error while reading from database");
+            return;
+        }
+        if (!Authenticator.getInstance().authenticate()) {
             return;
         }
         mainLoop:
         while (true) {
-            switch (GUI.showMenu()) {
+            switch (gui.showMenu()) {
                 case "1":
-                    GUI.listVehicles(database.getVehicles());
+                    gui.listVehicles(vehicleRepository.getVehicles());
                     break;
                 case "2":
-                    GUI.showRentReturnResult(database.rentVehicle(GUI.readPLate()));
+                    gui.showRentReturnResult(vehicleRepository.rentVehicle(gui.readPLate()));
                     break;
                 case "3":
-                    GUI.showRentReturnResult(database.returnVehicle(GUI.readPLate()));
+                    gui.showRentReturnResult(vehicleRepository.returnVehicle(gui.readPLate()));
                     break;
                 case "4":
-                    FileLoader fileLoader = new FileLoader();
                     try {
                         fileLoader.saveDataToFile();
                         break mainLoop;
                     } catch (IOException e) {
-                        System.out.println("Database ERROR");
+                        System.out.println("Error while writing to database");
                     }
                 default:
                     System.out.println("Wrong choice");
@@ -40,7 +51,7 @@ public class Core {
         }
     }
 
-    public static VehicleRepository getVehicleRepository() {
-        return database;
+    public static Core getInstance() {
+        return instance;
     }
 }

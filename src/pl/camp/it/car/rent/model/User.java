@@ -16,6 +16,10 @@ public class User implements Writable {
     public User() {
     }
 
+    public String getClassName() {
+        return this.getClass().getSimpleName();
+    }
+
     public String getLogin() {
         return login;
     }

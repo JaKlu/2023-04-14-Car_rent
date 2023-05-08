@@ -7,29 +7,33 @@ import java.util.Collection;
 import java.util.Scanner;
 
 public class GUI {
+    private static final GUI instance = new GUI();
     private static Scanner scanner = new Scanner(System.in);
 
-    public static String showMenu() {
-        System.out.println("1. List cars");
-        System.out.println("2. Rent car");
-        System.out.println("3. Return car");
+    private GUI() {
+    }
+
+    public String showMenu() {
+        System.out.println("1. List vehicles");
+        System.out.println("2. Rent vehicles");
+        System.out.println("3. Return vehicles");
         System.out.println("4. Exit");
 
         return scanner.nextLine();
     }
 
-    public static void listVehicles(Collection<Vehicle> vehicles) {
+    public void listVehicles(Collection<Vehicle> vehicles) {
         for (Vehicle vehicle : vehicles) {
             System.out.println(vehicle);
         }
     }
 
-    public static String readPLate() {
+    public String readPLate() {
         System.out.println("Insert plate number: ");
         return scanner.nextLine();
     }
 
-    public static void showRentReturnResult(boolean result) {
+    public void showRentReturnResult(boolean result) {
         if (result) {
             System.out.println("Success!");
         } else {
@@ -37,7 +41,7 @@ public class GUI {
         }
     }
 
-    public static User readLoginAndPassword() {
+    public User readLoginAndPassword() {
         System.out.println("Login:");
         String login = scanner.nextLine();
 
@@ -45,4 +49,7 @@ public class GUI {
         return new User(login, scanner.nextLine());
     }
 
+    public static GUI getInstance() {
+        return instance;
+    }
 }
