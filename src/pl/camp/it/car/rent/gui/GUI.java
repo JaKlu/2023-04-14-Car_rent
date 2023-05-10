@@ -1,5 +1,6 @@
 package pl.camp.it.car.rent.gui;
 
+import pl.camp.it.car.rent.db.VehicleRepository;
 import pl.camp.it.car.rent.model.User;
 import pl.camp.it.car.rent.model.Vehicle;
 
@@ -22,8 +23,8 @@ public class GUI {
         return scanner.nextLine();
     }
 
-    public void listVehicles(Collection<Vehicle> vehicles) {
-        for (Vehicle vehicle : vehicles) {
+    public void listVehicles() {
+        for (Vehicle vehicle : VehicleRepository.getInstance().getVehicles()) {
             System.out.println(vehicle);
         }
     }

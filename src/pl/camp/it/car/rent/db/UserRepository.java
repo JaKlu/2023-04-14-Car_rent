@@ -17,6 +17,7 @@ public class UserRepository {
     }*/
     public void addUser(User user) {
         users.put(user.getLogin(), user);
+
     }
 
     public User findUserByLogin(String login) {

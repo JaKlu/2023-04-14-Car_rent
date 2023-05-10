@@ -29,7 +29,7 @@ public class Core {
         while (true) {
             switch (gui.showMenu()) {
                 case "1":
-                    gui.listVehicles(vehicleRepository.getVehicles());
+                    gui.listVehicles();
                     break;
                 case "2":
                     gui.showRentReturnResult(vehicleRepository.rentVehicle(gui.readPLate()));
